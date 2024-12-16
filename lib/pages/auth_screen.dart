@@ -28,8 +28,9 @@ class _AuthScreenState extends State<AuthScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const MainScreen()),
+        (Route<dynamic> route) => false,
       );
     } catch (e) {
       setState(() {
@@ -67,81 +68,85 @@ class _AuthScreenState extends State<AuthScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.10,
-            vertical: screenHeight * 0.0,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: screenHeight * 0.25,
-                child: Image.asset(
-                  "assets/images/images-dash/logo.png",
-                  fit: BoxFit.contain,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('Login'),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.10,
+              vertical: screenHeight * 0.0,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: screenHeight * 0.25,
+                  child: Image.asset(
+                    "assets/images/images-dash/logo.png",
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              TextField(
-                controller: _passwordController,
-                obscureText: _obscureText,
-                decoration: InputDecoration(
-                  labelText: 'Senha',
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                SizedBox(height: screenHeight * 0.02),
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+                SizedBox(height: screenHeight * 0.02),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: _obscureText,
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
                   ),
                 ),
-              ),
-              if (_errorMessage.isNotEmpty)
-                Padding(
-                  padding: EdgeInsets.only(top: screenHeight * 0.02),
-                  child: Text(
-                    _errorMessage,
-                    style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                if (_errorMessage.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(top: screenHeight * 0.02),
+                    child: Text(
+                      _errorMessage,
+                      style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                    ),
                   ),
+                SizedBox(height: screenHeight * 0.05),
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(2, 119, 189, 1),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 50.0,
+                      vertical: 20.0,
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: _signIn,
+                  child: const Text('Login'),
                 ),
-              SizedBox(height: screenHeight * 0.05),
-              FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: const Color.fromRGBO(2, 119, 189, 1),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 50.0,
-                    vertical: 20.0,
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                SizedBox(height: screenHeight * 0.02),
+                TextButton(
+                  onPressed: _resetPassword,
+                  child: const Text('Esqueceu a senha?'),
                 ),
-                onPressed: _signIn,
-                child: const Text('Login'),
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              TextButton(
-                onPressed: _resetPassword,
-                child: const Text('Esqueceu a senha?'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

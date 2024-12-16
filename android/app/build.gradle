@@ -9,7 +9,7 @@ plugins {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services' // Adicione esta linha
+apply plugin: 'com.google.gms.google-services'
 
 android {
     namespace = "com.example.dashboard_viacredi"

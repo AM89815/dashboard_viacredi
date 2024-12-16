@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:dashboard_viacredi/pages/auth_screen.dart'; // Adicione esta linha se ainda não estiver importada
 
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({super.key});
@@ -9,7 +10,10 @@ class LogoutDialog extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
-      Navigator.of(context).pushReplacementNamed('/auth');
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const AuthScreen()),
+        (Route<dynamic> route) => false,
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao sair. Tente novamente.')),
